@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Общая память программы</title>
+<style>
+:root {
+  --bg: #fbfaf7; --surface: #ffffff; --text: #1d1d1f; --muted: #5f6368;
+  --line: #d9d6cf; --accent: #1f5f8b; --accent-soft: #e6eff6;
+  --atom: #2f6b3a; --atom-soft: #e7f1e8; --derived: #7a4d12; --derived-soft: #f6ecdf;
+  --private: #6b2f5f; --private-soft: #f3e7f0;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #151618; --surface: #1e2023; --text: #ececec; --muted: #a4a8ad;
+    --line: #3a3d42; --accent: #7fb4db; --accent-soft: #1d2c38;
+    --atom: #8fcf98; --atom-soft: #1c2b1f; --derived: #e0b27a; --derived-soft: #2e2418;
+    --private: #d79bc9; --private-soft: #2d1f2a;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #151618; --surface: #1e2023; --text: #ececec; --muted: #a4a8ad;
+  --line: #3a3d42; --accent: #7fb4db; --accent-soft: #1d2c38;
+  --atom: #8fcf98; --atom-soft: #1c2b1f; --derived: #e0b27a; --derived-soft: #2e2418;
+  --private: #d79bc9; --private-soft: #2d1f2a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+main { max-width: 760px; margin: 0 auto; padding: 28px 16px 48px; }
+h1 { font-size: 1.7rem; line-height: 1.2; margin: 0 0 8px; }
+h2 { font-size: 1.2rem; margin: 36px 0 10px; }
+p, li { margin: 0 0 10px; }
+ul { padding-left: 20px; }
+.lead { color: var(--muted); font-size: 1.05rem; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin: 14px 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+.grid .card { margin: 0; }
+.card h3 { margin: 0 0 6px; font-size: 1rem; }
+.tag { display: inline-block; font-size: .78rem; padding: 1px 8px; border-radius: 999px; margin-bottom: 6px; }
+.t-atom { background: var(--atom-soft); color: var(--atom); }
+.t-der { background: var(--derived-soft); color: var(--derived); }
+.t-priv { background: var(--private-soft); color: var(--private); }
+.t-pub { background: var(--accent-soft); color: var(--accent); }
+figure { margin: 16px 0; }
+figure svg { width: 100%; height: auto; display: block; }
+figcaption { color: var(--muted); font-size: .9rem; margin-top: 6px; }
+svg text { font-family: inherit; fill: var(--text); }
+svg .small { font-size: 11px; fill: var(--muted); }
+svg .box { fill: var(--surface); stroke: var(--line); stroke-width: 1.2; }
+svg .pub { fill: var(--accent-soft); stroke: var(--accent); }
+svg .priv { fill: var(--private-soft); stroke: var(--private); }
+svg .atom { fill: var(--atom-soft); stroke: var(--atom); }
+svg .der { fill: var(--derived-soft); stroke: var(--derived); }
+svg .arrow { stroke: var(--muted); stroke-width: 1.4; fill: none; marker-end: url(#ah); }
+svg .dash { stroke-dasharray: 4 3; }
+svg #ah path { fill: var(--muted); }
+table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+td, th { text-align: left; vertical-align: top; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; }
+a { color: var(--accent); overflow-wrap: anywhere; }
+code { font-size: .9em; background: var(--accent-soft); padding: 0 4px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Общая память программы на GitHub</h1>
+<p class="lead">Всё, что записывается на модулях, хранится как сырьё («атомы») и служит источником для любого анализа. Команды работают со своими материалами и с этим сырьём через свои ИИ-модели — по одним правилам.</p>
+
+<h2>Три части</h2>
+<figure>
+<svg viewBox="0 0 360 330" role="img" aria-label="Шаблоны, хаб организаторов, репозитории команд">
+  <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="box pub" x="10" y="10" width="160" height="54" rx="8"/>
+  <text x="90" y="33" text-anchor="middle" font-size="13" font-weight="600">Шаблон хаба</text>
+  <text x="90" y="51" text-anchor="middle" class="small">публичный, пустой</text>
+  <rect class="box pub" x="190" y="10" width="160" height="54" rx="8"/>
+  <text x="270" y="33" text-anchor="middle" font-size="13" font-weight="600">Шаблон команды</text>
+  <text x="270" y="51" text-anchor="middle" class="small">публичный, пустой</text>
+  <rect class="box priv" x="60" y="110" width="240" height="62" rx="8"/>
+  <text x="180" y="134" text-anchor="middle" font-size="14" font-weight="600">Хаб организаторов</text>
+  <text x="180" y="153" text-anchor="middle" class="small">приватный; участники читают</text>
+  <rect class="box priv" x="10" y="240" width="104" height="54" rx="8"/>
+  <text x="62" y="263" text-anchor="middle" font-size="12" font-weight="600">Команда 1</text>
+  <text x="62" y="280" text-anchor="middle" class="small">приватный</text>
+  <rect class="box priv" x="128" y="240" width="104" height="54" rx="8"/>
+  <text x="180" y="263" text-anchor="middle" font-size="12" font-weight="600">Команда 2</text>
+  <text x="180" y="280" text-anchor="middle" class="small">приватный</text>
+  <rect class="box priv" x="246" y="240" width="104" height="54" rx="8"/>
+  <text x="298" y="263" text-anchor="middle" font-size="12" font-weight="600">Команда N</text>
+  <text x="298" y="280" text-anchor="middle" class="small">приватный</text>
+  <path class="arrow" d="M90 64 L150 108"/>
+  <path class="arrow" d="M270 64 C 350 120, 350 200, 305 238"/>
+  <text x="322" y="86" class="small" text-anchor="end">каждая команда</text>
+  <text x="322" y="100" class="small" text-anchor="end">из шаблона</text>
+  <path class="arrow" d="M120 172 L70 238"/>
+  <path class="arrow" d="M180 172 L180 238"/>
+  <path class="arrow" d="M240 172 L290 238"/>
+  <text x="186" y="212" class="small">читают</text>
+  <path class="arrow dash" d="M40 238 C 20 200, 40 170, 58 150"/>
+  <text x="10" y="316" class="small">пунктир — сдачи команд через формы (issue)</text>
+</svg>
+<figcaption>Команды не видят репозитории друг друга. Хаб видят все участники, меняют — только организаторы.</figcaption>
+</figure>
+
+<h2>Атомы и производное</h2>
+<figure>
+<svg viewBox="0 0 360 256" role="img" aria-label="Атомы порождают производные материалы">
+  <defs><marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
+  <text x="10" y="18" font-size="12" font-weight="600" style="fill:var(--atom)">АТОМЫ — хранятся как есть, не меняются</text>
+  <rect class="box atom" x="10" y="28" width="108" height="46" rx="8"/><text x="64" y="56" text-anchor="middle" font-size="12">Транскрипты</text>
+  <rect class="box atom" x="126" y="28" width="108" height="46" rx="8"/><text x="180" y="56" text-anchor="middle" font-size="12">Материалы</text>
+  <rect class="box atom" x="242" y="28" width="108" height="46" rx="8"/><text x="296" y="56" text-anchor="middle" font-size="12">Сдачи команд</text>
+  <path d="M180 80 L180 138" style="stroke:var(--muted);stroke-width:1.4;fill:none" marker-end="url(#ah2)"/>
+  <text x="190" y="106" class="small">ссылка на атом —</text>
+  <text x="190" y="120" class="small">до минуты записи</text>
+  <text x="10" y="160" font-size="12" font-weight="600" style="fill:var(--derived)">ПРОИЗВОДНОЕ — всегда можно пересобрать</text>
+  <rect class="box der" x="10" y="170" width="80" height="46" rx="8"/><text x="50" y="198" text-anchor="middle" font-size="11">Конспекты</text>
+  <rect class="box der" x="97" y="170" width="80" height="46" rx="8"/><text x="137" y="191" text-anchor="middle" font-size="11">Итоги</text><text x="137" y="205" text-anchor="middle" font-size="11">разборов</text>
+  <rect class="box der" x="184" y="170" width="80" height="46" rx="8"/><text x="224" y="191" text-anchor="middle" font-size="11">Указатели</text><text x="224" y="205" text-anchor="middle" font-size="11">по темам</text>
+  <rect class="box der" x="271" y="170" width="80" height="46" rx="8"/><text x="311" y="191" text-anchor="middle" font-size="11">Карты</text><text x="311" y="205" text-anchor="middle" font-size="11">команд</text>
+  <text x="10" y="234" class="small">у каждого производного файла записано,</text>
+  <text x="10" y="248" class="small">из каких атомов и каким способом он получен</text>
+</svg>
+</figure>
+
+<h2>Путь записи</h2>
+<figure>
+<svg viewBox="0 0 360 400" role="img" aria-label="От записи к опубликованному транскрипту">
+  <defs><marker id="ah3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
+  <g font-size="13">
+    <rect class="box" x="40" y="8" width="280" height="44" rx="8"/><text x="180" y="35" text-anchor="middle">Занятие модуля — аудиозапись</text>
+    <rect class="box" x="40" y="74" width="280" height="44" rx="8"/><text x="180" y="95" text-anchor="middle">Распознавание речи,</text><text x="180" y="111" text-anchor="middle">разметка спикеров</text>
+    <rect class="box atom" x="40" y="140" width="280" height="44" rx="8"/><text x="180" y="161" text-anchor="middle">Черновик транскрипта в хабе</text><text x="180" y="177" text-anchor="middle" class="small">до конца следующего дня</text>
+    <rect class="box" x="40" y="206" width="280" height="56" rx="8"/><text x="180" y="228" text-anchor="middle">Окно проверки</text><text x="180" y="245" text-anchor="middle" class="small">участник может попросить убрать фрагмент;</text><text x="180" y="258" text-anchor="middle" class="small">по умолчанию 48 часов</text>
+    <rect class="box atom" x="40" y="284" width="280" height="44" rx="8"/><text x="180" y="305" text-anchor="middle">Транскрипт опубликован</text><text x="180" y="321" text-anchor="middle" class="small">дословно, с контрольной суммой</text>
+    <rect class="box der" x="40" y="350" width="280" height="44" rx="8"/><text x="180" y="371" text-anchor="middle">Команды забирают, анализируют,</text><text x="180" y="387" text-anchor="middle">ссылаются</text>
+  </g>
+  <g style="stroke:var(--muted);stroke-width:1.4;fill:none">
+    <path d="M180 52 L180 72" marker-end="url(#ah3)"/><path d="M180 118 L180 138" marker-end="url(#ah3)"/>
+    <path d="M180 184 L180 204" marker-end="url(#ah3)"/><path d="M180 262 L180 282" marker-end="url(#ah3)"/>
+    <path d="M180 328 L180 348" marker-end="url(#ah3)"/>
+  </g>
+</svg>
+<figcaption>Сказать «это не для записи» можно до начала разговора. Аудио хранится в облаке организаторов, в хабе — ссылка.</figcaption>
+</figure>
+
+<h2>Что это даёт</h2>
+<div class="grid">
+  <div class="card"><span class="tag t-atom">организаторам</span>
+    <ul>
+      <li>одна база сырья по всем модулям, которая не портится со временем;</li>
+      <li>любой анализ, конспект или отображение пересобирается из атомов;</li>
+      <li>правила для ИИ-моделей всех команд — в одном файле хаба, изменения доходят до команд при следующем обновлении;</li>
+      <li>сдачи команд — через формы, в едином формате.</li>
+    </ul></div>
+  <div class="card"><span class="tag t-der">участникам</span>
+    <ul>
+      <li>данные принадлежат участникам: весь хаб можно скачать себе;</li>
+      <li>знать GitHub не нужно — модель (Claude Code, Codex, Cursor) настраивает всё по готовому промпту;</li>
+      <li>каждая модель работает по одним правилам, поэтому команде легко работать вместе.</li>
+    </ul></div>
+  <div class="card"><span class="tag t-priv">приватность</span>
+    <ul>
+      <li>хаб и репозитории команд приватные;</li>
+      <li>команды не видят работу друг друга, пока сами её не сдали;</li>
+      <li>публичны только пустые шаблоны.</li>
+    </ul></div>
+</div>
+
+<h2>Что нужно от организаторов</h2>
+<table>
+  <tr><th>Шаг</th><th>Кто и как</th></tr>
+  <tr><td>Организация на GitHub</td><td>бесплатный план достаточен</td></tr>
+  <tr><td>Хаб из шаблона</td><td>одна команда или кнопка «Use this template»; модель организатора делает это по промпту из README шаблона</td></tr>
+  <tr><td>Доступ участникам</td><td>роль «Read»: читать и отправлять формы</td></tr>
+  <tr><td>Ответственный</td><td>человек, который публикует транскрипты и обрабатывает формы</td></tr>
+  <tr><td>Два решения</td><td>длина окна проверки; где хранить аудио</td></tr>
+</table>
+
+<h2>Где посмотреть</h2>
+<div class="card">
+  <p><span class="tag t-pub">шаблон хаба</span><br><a href="https://github.com/viberesearch/cohort-hub-template">github.com/viberesearch/cohort-hub-template</a></p>
+  <p><span class="tag t-pub">шаблон команды</span><br><a href="https://github.com/viberesearch/triad-workspace-template">github.com/viberesearch/triad-workspace-template</a></p>
+  <p style="margin:0">Схемы для тех, кто не работал с GitHub: <a href="https://github.com/viberesearch/triad-workspace-template/blob/main/HOW_IT_WORKS.md">HOW_IT_WORKS.md</a></p>
+</div>
+<p class="lead">Шаблоны открыты и бесплатны. Наша команда уже работает по шаблону команды; готовы помочь развернуть хаб.</p>
+
+</main>
+</body>
+</html>
