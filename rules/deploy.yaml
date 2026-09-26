@@ -1,0 +1,14 @@
+id: deploy
+trigger: deploy the program hub from this template (organizer)
+template: viberesearch/cohort-hub-template
+steps:
+  - tools_auth: same as triad-workspace-template rules/setup_create.yaml steps tools, account, auth, identity
+  - ask_human: [GitHub organization name (create at https://github.com/organizations/plan if none; free plan is enough), hub repo name, program language, review window hours (default 48)]
+  - create: "gh repo create <org>/<name> --private --template viberesearch/cohort-hub-template --clone"
+  - note: keep the live hub PRIVATE — recordings discuss teams' projects; only the template is public
+  - fill:
+      rules/local/hub.yaml: from rules/local/README.md example
+      schedule.md: modules, dates, deliverables
+      rules/for_teams.yaml: program rules for team models (edit the example)
+  - commit_to_main: first setup commit only; push
+  - next: access.yaml

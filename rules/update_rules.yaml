@@ -1,0 +1,10 @@
+id: update_rules
+trigger: update rules from the template (organizer)
+managed_by_template: ["rules/*.yaml except for_teams.yaml", rules/VERSION, rules/CHANGELOG.md, AGENTS.md, scripts/, .github/workflows/]
+not_touched: [rules/local/, rules/for_teams.yaml, atoms/, derived/]
+steps:
+  - "git remote get-url template || git remote add template https://github.com/viberesearch/cohort-hub-template.git"
+  - "git fetch template; cat rules/VERSION; git show template/main:rules/VERSION"
+  - show_human: new entries of template rules/CHANGELOG.md and "git diff HEAD template/main --stat -- ':(glob)rules/*.yaml' AGENTS.md scripts .github/workflows"
+  - with_consent: "git switch -c <login>/rules-<version>; git checkout template/main -- ':(glob)rules/*.yaml' rules/VERSION rules/CHANGELOG.md AGENTS.md scripts .github/workflows; git checkout HEAD -- rules/for_teams.yaml"
+  - "bash scripts/check.sh; commit; PR"

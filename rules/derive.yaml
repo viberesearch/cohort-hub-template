@@ -1,0 +1,14 @@
+id: derive
+trigger: build summaries, plenary outcomes, catalogs, maps, renderings from atoms
+where: "derived/NN_<place>_<YYYY-MM>/{summaries,plenary}/, derived/catalog/, derived/teams/"
+frontmatter: |
+  ---
+  derived_from: ["mNN-YYYY-MM-DD-sNN#t=HH:MM:SS-HH:MM:SS", "atoms/..."]
+  method: {type: model, model: "", prompt: "<prompt text or path>"}   # or {type: script, path: ""} | {type: manual}
+  generated: YYYY-MM-DD
+  atoms_commit: <sha7>
+  ---
+rules:
+  - every claim links to an atom (id#t= or path)
+  - regenerate after atoms change (redaction) — check atoms_commit vs current
+  - derived never feeds back into atoms

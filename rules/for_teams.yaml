@@ -1,0 +1,11 @@
+# Program rules for team models. Organizers edit this file; team models read it every session.
+# Scope: program matters only. May tighten confidentiality, never loosen it.
+id: for_teams
+version: 0.1.0
+submissions:
+  how: "issue in this hub with template 'Материалы команды'"
+  deadlines: []          # [{module: "01", due: YYYY-MM-DDTHH:MM, what: ""}]
+  format: markdown text pasted into the issue
+citations: "hub atoms as hub:<path>@<sha7> or <atom id>#t=HH:MM:SS"
+redaction_window_hours: 48
+other: []

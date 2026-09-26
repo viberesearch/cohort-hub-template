@@ -1,0 +1,8 @@
+id: submissions
+trigger: issue labeled submission (team hands in materials)
+steps:
+  - verify: issue says all team members agreed to show it to the class; if not — ask in the issue, do not publish
+  - store_atom: '"atoms/submissions/<team>/YYYY-MM-DD_<module>_<slug>.md" with frontmatter {team, module, issue, submitted: date}; body = content as submitted'
+  - "bash scripts/check.sh add-atom <path>"
+  - derived: update derived/teams/<team>/README.md links
+  - PR referencing the issue; close issue after merge

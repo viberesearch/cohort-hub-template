@@ -1,0 +1,12 @@
+id: publish
+trigger: turn a session recording into a published transcript atom (organizer)
+steps:
+  - asr: transcribe + diarize the audio (local or cloud engine per rules/local/hub.yaml); keep audio in cloud
+  - draft: write file per recording.yaml, status draft, review_until = now + review window; manifest entry; branch "<login>/draft-<id>"; PR; merge
+  - announce: tell participants the draft is open for review until review_until
+  - review_window: process redaction issues (redaction.yaml) before publishing
+  - publish:
+      - set status published; clear review_until
+      - "bash scripts/check.sh add-atom <path>"   # checksum fixes the body from now on
+      - PR, merge
+  - derive: optional summaries/index updates per derive.yaml

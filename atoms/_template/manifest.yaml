@@ -1,0 +1,12 @@
+module: "NN"
+title: ""
+place: ""
+dates: {from: YYYY-MM-DD, to: YYYY-MM-DD}
+atoms:
+  - id: mNN-YYYY-MM-DD-sNN          # stable id; cite as <id>#t=HH:MM:SS
+    kind: transcript                # transcript | material
+    path: transcripts/YYYY-MM-DD_sNN_<slug>.md
+    session: {date: YYYY-MM-DD, time: "HH:MM", title: "", type: plenary}   # plenary | team_work | expert | review | other
+    recording: "<cloud link>"
+    status: draft                   # draft | published
+    tags: {topics: [], teams: [], speakers: []}

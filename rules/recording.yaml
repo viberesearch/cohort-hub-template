@@ -1,0 +1,23 @@
+id: recording
+trigger: format of transcript atoms
+path: "atoms/NN_<place>_<YYYY-MM>/transcripts/YYYY-MM-DD_sNN_<slug>.md"
+id_scheme: "mNN-YYYY-MM-DD-sNN"   # cite a moment as <id>#t=HH:MM:SS
+frontmatter: |
+  ---
+  id: mNN-YYYY-MM-DD-sNN
+  module: "NN"
+  date: YYYY-MM-DD
+  session: {time: "HH:MM", title: "", type: plenary}   # plenary | team_work | expert | review | other
+  speakers: [{label: S1, name: "<name if consented, else role>", team: ""}]
+  language: ru
+  recording: "<cloud link; audio never in git>"
+  asr: {engine: "", diarization: ""}
+  status: draft            # draft | published | withdrawn
+  review_until: YYYY-MM-DDTHH:MM
+  redactions: []           # [{at: "HH:MM:SS-HH:MM:SS", category: "", issue: N}]
+  known_asr_errors: []     # ["«as recognized» — correct"]
+  verbatim: true
+  ---
+body_line: "[HH:MM:SS] S1: <text>"
+off_record: segment not transcribed; line "[не для записи HH:MM:SS-HH:MM:SS]"
+manifest: 'add/update the atom entry in atoms/NN_.../manifest.yaml (tags: topics, teams, speakers)'

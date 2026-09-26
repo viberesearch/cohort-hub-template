@@ -1,0 +1,7 @@
+id: access
+trigger: give or remove participant access (organizer)
+grant_read: "gh api -X PUT repos/<org>/<hub>/collaborators/<login> -f permission=pull"   # Read: clone, pull, open issues
+remove: "gh api -X DELETE repos/<org>/<hub>/collaborators/<login>"
+note: removed participants keep their clones; data belongs to participants (RECORDING_PROTOCOL.md)
+list: "gh api repos/<org>/<hub>/collaborators --jq '.[].login'"
+record: rules/local/hub.yaml participants list (logins, team)

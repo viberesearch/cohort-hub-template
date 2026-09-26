@@ -1,0 +1,12 @@
+id: redaction
+trigger: issue labeled redaction, or a participant asks to remove a fragment
+in_window:
+  - locate file + timestamp from the issue
+  - replace the fragment with "[изъято: <category>, issue #N]"
+  - frontmatter redactions += {at, category, issue}
+  - PR referencing the issue; close issue after merge
+after_publish:
+  - same edit; then "bash scripts/check.sh add-atom <path>" to re-record the checksum
+  - note in the PR why the late redaction was accepted
+  - derived files built from the atom: regenerate or remove the fragment there too
+never: quote the removed fragment in issues, PRs, commits or derived files
